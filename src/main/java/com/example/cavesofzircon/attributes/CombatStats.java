@@ -100,19 +100,19 @@ public class CombatStats extends BaseAttribute implements DisplayableAttribute {
                 ),
                 PropertyExtensions.toStringProperty(maxHpProperty)
         );
-        hpLabel.getTextProperty().updateFrom(hpBinding, false);
+        hpLabel.getTextProperty().updateFrom(hpBinding, true);
 
         var attackBinding = StringBindingsKt.bindPlusWith(
                 Properties.createPropertyFrom("Att: ", v -> Boolean.TRUE),
                 PropertyExtensions.toStringProperty(attackValueProperty)
         );
-        attackLabel.getTextProperty().updateFrom(attackBinding, false);
+        attackLabel.getTextProperty().updateFrom(attackBinding, true);
 
         var defenseBinding = StringBindingsKt.bindPlusWith(
                 Properties.createPropertyFrom("Def: ", v -> Boolean.TRUE),
                 PropertyExtensions.toStringProperty(defenseValueProperty)
         );
-        defenseLabel.getTextProperty().updateFrom(defenseBinding, false);
+        defenseLabel.getTextProperty().updateFrom(defenseBinding, true);
 
         vbox.addComponent(
                 Components.textBox(width)

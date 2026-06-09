@@ -11,7 +11,7 @@ public final class PropertyExtensions {
 
     public static Property<String> toStringProperty(ObservableValue<Integer> intProp) {
         var strProp = Properties.createPropertyFrom("", v -> Boolean.TRUE);
-        strProp.updateFrom(intProp, false, Object::toString);
+        strProp.updateFrom(intProp, true, Object::toString);
         return strProp;
     }
 }

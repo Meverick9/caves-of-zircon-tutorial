@@ -34,7 +34,7 @@ public class ZirconCounter extends BaseAttribute implements DisplayableAttribute
                 .withText(zirconBinding.getValue())
                 .withSize(width, 1)
                 .build();
-        header.getTextProperty().updateFrom(zirconBinding, false);
+        header.getTextProperty().updateFrom(zirconBinding, true);
         return header;
     }
 }

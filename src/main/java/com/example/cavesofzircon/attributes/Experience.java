@@ -59,13 +59,13 @@ public class Experience extends BaseAttribute implements DisplayableAttribute {
                 Properties.createPropertyFrom("XP:  ", v -> Boolean.TRUE),
                 PropertyExtensions.toStringProperty(currentXPProperty)
         );
-        xpLabel.getTextProperty().updateFrom(xpBinding, false);
+        xpLabel.getTextProperty().updateFrom(xpBinding, true);
 
         var levelBinding = StringBindingsKt.bindPlusWith(
                 Properties.createPropertyFrom("Lvl: ", v -> Boolean.TRUE),
                 PropertyExtensions.toStringProperty(currentLevelProperty)
         );
-        levelLabel.getTextProperty().updateFrom(levelBinding, false);
+        levelLabel.getTextProperty().updateFrom(levelBinding, true);
 
         vbox.addComponent(
                 Components.textBox(width)
