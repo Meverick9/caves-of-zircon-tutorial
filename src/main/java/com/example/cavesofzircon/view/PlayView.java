@@ -76,25 +76,25 @@ public class PlayView extends BaseView {
 
         var eventBus = Zircon.INSTANCE.getEventBus();
 
-        eventBus.<GameLogEvent>subscribeTo(ApplicationScope.INSTANCE, GameLogEvent.class.getName(),
+        eventBus.<GameLogEvent>subscribeTo(ApplicationScope.INSTANCE, GameLogEvent.class.getSimpleName(),
                 event -> {
                     logArea.addParagraph(event.getText(), false, 10);
                     return KeepSubscription.INSTANCE;
                 });
 
-        eventBus.<PlayerGainedLevel>subscribeTo(ApplicationScope.INSTANCE, PlayerGainedLevel.class.getName(),
+        eventBus.<PlayerGainedLevel>subscribeTo(ApplicationScope.INSTANCE, PlayerGainedLevel.class.getSimpleName(),
                 event -> {
                     getScreen().openModal(new LevelUpDialog(getScreen(), game.getPlayer()));
                     return KeepSubscription.INSTANCE;
                 });
 
-        eventBus.<PlayerWonTheGame>subscribeTo(ApplicationScope.INSTANCE, PlayerWonTheGame.class.getName(),
+        eventBus.<PlayerWonTheGame>subscribeTo(ApplicationScope.INSTANCE, PlayerWonTheGame.class.getSimpleName(),
                 event -> {
                     replaceWith(new WinView(grid, event.getZircons()));
                     return DisposeSubscription.INSTANCE;
                 });
 
-        eventBus.<PlayerDied>subscribeTo(ApplicationScope.INSTANCE, PlayerDied.class.getName(),
+        eventBus.<PlayerDied>subscribeTo(ApplicationScope.INSTANCE, PlayerDied.class.getSimpleName(),
                 event -> {
                     replaceWith(new LoseView(grid, event.getCause()));
                     return DisposeSubscription.INSTANCE;
