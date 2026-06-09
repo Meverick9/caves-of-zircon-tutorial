@@ -9,3 +9,7 @@
 **/*.ipr
 **/node_modules/
 **/.DS.Store
+target/
+dependency-reduced-pom.xml
+META-INF/
+org/
