@@ -18,7 +18,7 @@ public class CameraMover extends BaseFacet<GameContext, MoveCamera> {
     }
 
     @Override
-    public Object receiveMessage(MoveCamera message, Continuation<? super Response> continuation) {
+    public Object receive(MoveCamera message, Continuation<? super Response> continuation) {
         var context = message.getContext();
         var source = message.getSource();
         var previousPosition = message.getPreviousPosition();

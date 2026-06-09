@@ -23,14 +23,13 @@ public class Destructible extends BaseFacet<GameContext, Destroy> {
     }
 
     @Override
-    public Object receiveMessage(Destroy message, Continuation<? super Response> continuation) {
+    public Object receive(Destroy message, Continuation<? super Response> continuation) {
         var context = message.getContext();
         var destroyer = message.getSource();
         var target = message.getTarget();
         var cause = message.getCause();
 
         context.getWorld().removeEntity(target);
-        destroyer.receiveMessage(new EntityDestroyed(context, target, destroyer), continuation);
         destroyer.receiveMessage(new EntityDestroyed(context, target, destroyer), continuation);
 
         if (EntityExtensions.isPlayer(target)) {

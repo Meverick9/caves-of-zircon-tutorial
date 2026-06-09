@@ -18,7 +18,7 @@ public class ExamineDialog extends Dialog {
     public ExamineDialog(Screen screen, Entity<? extends Item, GameContext> item) {
         super(screen);
         var panel = Components.panel()
-                .withDecorations(ComponentDecorations.box("Examining " + item.getName(), BoxType.TOP_BOTTOM_DOUBLE))
+                .withDecorations(ComponentDecorations.box(BoxType.TOP_BOTTOM_DOUBLE, "Examining " + item.getName()))
                 .withSize(25, 15)
                 .build();
 

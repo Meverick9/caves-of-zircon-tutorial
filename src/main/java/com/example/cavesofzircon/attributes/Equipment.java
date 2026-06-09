@@ -169,6 +169,6 @@ public class Equipment extends BaseAttribute implements DisplayableAttribute {
     private static org.hexworks.zircon.api.data.GraphicalTile getItemIconTile(Entity<?, GameContext> entity) {
         return entity.findAttribute(kotlin.jvm.JvmClassMappingKt.getKotlinClass(ItemIcon.class))
                 .map(ItemIcon::getIconTile)
-                .orElseThrow(() -> new NoSuchElementException("No icon tile"));
+                .orElseThrow(() -> new java.util.NoSuchElementException("No icon tile"));
     }
 }

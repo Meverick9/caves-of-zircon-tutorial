@@ -64,7 +64,10 @@ public class WorldBuilder {
     }
 
     private void forAllPositions(java.util.function.Consumer<Position3D> fn) {
-        worldSize.fetchPositions().forEach(fn::accept);
+        var iter = worldSize.fetchPositions().iterator();
+        while (iter.hasNext()) {
+            fn.accept(iter.next());
+        }
     }
 
     private WorldBuilder connectLevels() {

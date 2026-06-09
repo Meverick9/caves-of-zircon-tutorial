@@ -17,7 +17,7 @@ public class Diggable extends BaseFacet<GameContext, Dig> {
     }
 
     @Override
-    public Object receiveMessage(Dig message, Continuation<? super Response> continuation) {
+    public Object receive(Dig message, Continuation<? super Response> continuation) {
         var context = message.getContext();
         var target = message.getTarget();
         context.getWorld().removeEntity(target);

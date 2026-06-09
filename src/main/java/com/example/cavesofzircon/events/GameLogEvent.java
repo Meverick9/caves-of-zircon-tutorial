@@ -2,6 +2,8 @@ package com.example.cavesofzircon.events;
 
 import org.hexworks.cobalt.events.api.Event;
 
+import java.util.Collections;
+
 public class GameLogEvent implements Event {
 
     private final String text;
@@ -19,5 +21,15 @@ public class GameLogEvent implements Event {
     @Override
     public Object getEmitter() {
         return emitter;
+    }
+
+    @Override
+    public String getKey() {
+        return Event.DefaultImpls.getKey(this);
+    }
+
+    @Override
+    public Iterable<Event> getTrace() {
+        return Event.DefaultImpls.getTrace(this);
     }
 }

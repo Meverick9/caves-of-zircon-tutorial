@@ -20,7 +20,8 @@ public class FungusGrowth extends BaseBehavior<GameContext> {
     }
 
     @Override
-    public Object update(Entity<EntityType, GameContext> entity, GameContext context, Continuation<? super Boolean> continuation) {
+    public Object update(Entity<? extends EntityType, GameContext> entity, GameContext context,
+                         Continuation<? super Boolean> continuation) {
         var world = context.getWorld();
         var fungusSpread = EntityExtensions.tryToFindAttribute(entity, FungusSpread.class);
         int spreadCount = fungusSpread.getSpreadCount();
@@ -31,7 +32,7 @@ public class FungusGrowth extends BaseBehavior<GameContext> {
                     entityPos.withRelativeX(-1).withRelativeY(-1),
                     Size3D.create(3, 3, 0)
             ).map(emptyLocation -> {
-                world.addEntity(EntityFactory.newFungus(fungusSpread), emptyLocation);
+                world.addEntity((Entity<EntityType, GameContext>)(Object) EntityFactory.newFungus(fungusSpread), emptyLocation);
                 fungusSpread.setSpreadCount(fungusSpread.getSpreadCount() + 1);
                 return emptyLocation;
             });

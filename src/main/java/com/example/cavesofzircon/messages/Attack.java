@@ -24,7 +24,12 @@ public class Attack implements EntityAction<Combatant, Combatant> {
     }
 
     @Override
-    public Entity<Combatant, GameContext> getSource() {
+    @SuppressWarnings("unchecked")
+    public Entity<org.hexworks.amethyst.api.entity.EntityType, GameContext> getSource() {
+        return (Entity<org.hexworks.amethyst.api.entity.EntityType, GameContext>)(Object) source;
+    }
+
+    public Entity<Combatant, GameContext> getAttacker() {
         return source;
     }
 

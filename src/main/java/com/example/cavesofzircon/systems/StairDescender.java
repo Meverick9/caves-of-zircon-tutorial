@@ -1,7 +1,6 @@
 package com.example.cavesofzircon.systems;
 
 import com.example.cavesofzircon.attributes.types.EntityTypes;
-import com.example.cavesofzircon.attributes.types.Player;
 import com.example.cavesofzircon.events.PlayerWonTheGame;
 import com.example.cavesofzircon.extensions.EntityExtensions;
 import com.example.cavesofzircon.functions.Functions;
@@ -24,7 +23,7 @@ public class StairDescender extends BaseFacet<GameContext, MoveDown> {
     }
 
     @Override
-    public Object receiveMessage(MoveDown message, Continuation<? super Response> continuation) {
+    public Object receive(MoveDown message, Continuation<? super Response> continuation) {
         var context = message.getContext();
         var source = message.getSource();
         var world = context.getWorld();
@@ -43,7 +42,7 @@ public class StairDescender extends BaseFacet<GameContext, MoveDown> {
                 world.moveEntity(source, pos.withRelativeZ(-1));
                 world.scrollOneDown();
             } else if (hasExit) {
-                EntityExtensions.whenTypeIs(source, Player.class, playerEntity -> {
+                EntityExtensions.whenTypeIs(source, EntityTypes.PlayerType.class, playerEntity -> {
                     var counter = EntityExtensions.getZirconCounter(playerEntity);
                     Zircon.INSTANCE.getEventBus().publish(
                             new PlayerWonTheGame(counter.getZirconCount(), StairDescender.this),

@@ -25,12 +25,21 @@ public class Eat implements EntityAction<EnergyUser, Food> {
     }
 
     @Override
-    public Entity<EnergyUser, GameContext> getSource() {
+    @SuppressWarnings("unchecked")
+    public Entity<org.hexworks.amethyst.api.entity.EntityType, GameContext> getSource() {
+        return (Entity<org.hexworks.amethyst.api.entity.EntityType, GameContext>)(Object) source;
+    }
+
+    public Entity<EnergyUser, GameContext> getEater() {
         return source;
     }
 
     @Override
     public Entity<Food, GameContext> getTarget() {
+        return target;
+    }
+
+    public Entity<Food, GameContext> getFood() {
         return target;
     }
 }

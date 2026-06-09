@@ -9,41 +9,40 @@ import com.example.cavesofzircon.systems.*;
 import com.example.cavesofzircon.world.GameContext;
 import kotlin.Unit;
 import org.hexworks.amethyst.api.EntitiesKt;
+import org.hexworks.amethyst.api.builder.EntityBuilder;
 import org.hexworks.amethyst.api.entity.Entity;
 import org.hexworks.zircon.api.GraphicalTilesetResources;
 import org.hexworks.zircon.api.data.Tile;
 
 import java.util.Random;
 
+@SuppressWarnings({"unchecked", "rawtypes"})
 public final class EntityFactory {
 
     private EntityFactory() {}
 
     private static final Random RANDOM = new Random();
 
-    @SuppressWarnings("unchecked")
     public static Entity<EntityTypes.PlayerType, GameContext> newPlayer() {
-        return (Entity<EntityTypes.PlayerType, GameContext>) EntitiesKt.newEntityOfType(
+        return (Entity<EntityTypes.PlayerType, GameContext>)(Object) EntitiesKt.newEntityOfType(
                 EntityTypes.PlayerType.INSTANCE,
                 builder -> {
-                    builder.attributes(
+                    EntityBuilder b = (EntityBuilder) builder;
+                    b.attributes(
                             new Vision(9),
                             new EntityPosition(),
                             BlockOccupier.INSTANCE,
                             CombatStats.create(100, 10, 5),
                             new EntityTile(GameTileRepository.PLAYER),
-                            new EntityActions(
-                                    kotlin.jvm.JvmClassMappingKt.getKotlinClass(Dig.class),
-                                    kotlin.jvm.JvmClassMappingKt.getKotlinClass(Attack.class)
-                            ),
+                            new EntityActions(Dig.class, Attack.class),
                             new Inventory(10),
                             new EnergyLevel(1000, 1000),
                             new Equipment(newClub(), newJacket()),
                             new Experience(),
                             new ZirconCounter()
                     );
-                    builder.behaviors(InputReceiver.INSTANCE, EnergyExpender.INSTANCE);
-                    builder.facets(
+                    b.behaviors(InputReceiver.INSTANCE, EnergyExpender.INSTANCE);
+                    b.facets(
                             Movable.INSTANCE,
                             CameraMover.INSTANCE,
                             StairClimber.INSTANCE,
@@ -63,37 +62,37 @@ public final class EntityFactory {
         );
     }
 
-    @SuppressWarnings("unchecked")
     public static Entity<EntityTypes.WallType, GameContext> newWall() {
-        return (Entity<EntityTypes.WallType, GameContext>) EntitiesKt.newEntityOfType(
+        return (Entity<EntityTypes.WallType, GameContext>)(Object) EntitiesKt.newEntityOfType(
                 EntityTypes.WallType.INSTANCE,
                 builder -> {
-                    builder.attributes(
+                    EntityBuilder b = (EntityBuilder) builder;
+                    b.attributes(
                             new EntityPosition(),
                             BlockOccupier.INSTANCE,
                             new EntityTile(GameTileRepository.WALL),
                             VisionBlocker.INSTANCE
                     );
-                    builder.facets(Diggable.INSTANCE);
+                    b.facets(Diggable.INSTANCE);
                     return Unit.INSTANCE;
                 }
         );
     }
 
-    @SuppressWarnings("unchecked")
     public static Entity<EntityTypes.FungusType, GameContext> newFungus(FungusSpread fungusSpread) {
-        return (Entity<EntityTypes.FungusType, GameContext>) EntitiesKt.newEntityOfType(
+        return (Entity<EntityTypes.FungusType, GameContext>)(Object) EntitiesKt.newEntityOfType(
                 EntityTypes.FungusType.INSTANCE,
                 builder -> {
-                    builder.attributes(
+                    EntityBuilder b = (EntityBuilder) builder;
+                    b.attributes(
                             BlockOccupier.INSTANCE,
                             new EntityPosition(),
                             new EntityTile(GameTileRepository.FUNGUS),
                             fungusSpread,
                             CombatStats.create(10, 0, 0)
                     );
-                    builder.facets(Attackable.INSTANCE, Destructible.INSTANCE);
-                    builder.behaviors(FungusGrowth.INSTANCE);
+                    b.facets(Attackable.INSTANCE, Destructible.INSTANCE);
+                    b.behaviors(FungusGrowth.INSTANCE);
                     return Unit.INSTANCE;
                 }
         );
@@ -103,12 +102,12 @@ public final class EntityFactory {
         return newFungus(new FungusSpread());
     }
 
-    @SuppressWarnings("unchecked")
     public static Entity<EntityTypes.StairsDownType, GameContext> newStairsDown() {
-        return (Entity<EntityTypes.StairsDownType, GameContext>) EntitiesKt.newEntityOfType(
+        return (Entity<EntityTypes.StairsDownType, GameContext>)(Object) EntitiesKt.newEntityOfType(
                 EntityTypes.StairsDownType.INSTANCE,
                 builder -> {
-                    builder.attributes(
+                    EntityBuilder b = (EntityBuilder) builder;
+                    b.attributes(
                             new EntityTile(GameTileRepository.STAIRS_DOWN),
                             new EntityPosition()
                     );
@@ -117,12 +116,12 @@ public final class EntityFactory {
         );
     }
 
-    @SuppressWarnings("unchecked")
     public static Entity<EntityTypes.StairsUpType, GameContext> newStairsUp() {
-        return (Entity<EntityTypes.StairsUpType, GameContext>) EntitiesKt.newEntityOfType(
+        return (Entity<EntityTypes.StairsUpType, GameContext>)(Object) EntitiesKt.newEntityOfType(
                 EntityTypes.StairsUpType.INSTANCE,
                 builder -> {
-                    builder.attributes(
+                    EntityBuilder b = (EntityBuilder) builder;
+                    b.attributes(
                             new EntityTile(GameTileRepository.STAIRS_UP),
                             new EntityPosition()
                     );
@@ -131,47 +130,45 @@ public final class EntityFactory {
         );
     }
 
-    @SuppressWarnings("unchecked")
     public static Entity<EntityTypes.FOWType, GameContext> newFogOfWar() {
-        return (Entity<EntityTypes.FOWType, GameContext>) EntitiesKt.newEntityOfType(
+        return (Entity<EntityTypes.FOWType, GameContext>)(Object) EntitiesKt.newEntityOfType(
                 EntityTypes.FOWType.INSTANCE,
                 builder -> {
-                    builder.behaviors(FogOfWar.INSTANCE);
+                    EntityBuilder b = (EntityBuilder) builder;
+                    b.behaviors(FogOfWar.INSTANCE);
                     return Unit.INSTANCE;
                 }
         );
     }
 
-    @SuppressWarnings("unchecked")
     public static Entity<EntityTypes.BatType, GameContext> newBat() {
         var inventory = new Inventory(1);
         inventory.addItem(newBatMeat());
-        return (Entity<EntityTypes.BatType, GameContext>) EntitiesKt.newEntityOfType(
+        return (Entity<EntityTypes.BatType, GameContext>)(Object) EntitiesKt.newEntityOfType(
                 EntityTypes.BatType.INSTANCE,
                 builder -> {
-                    builder.attributes(
+                    EntityBuilder b = (EntityBuilder) builder;
+                    b.attributes(
                             BlockOccupier.INSTANCE,
                             new EntityPosition(),
                             new EntityTile(GameTileRepository.BAT),
                             CombatStats.create(5, 2, 1),
-                            new EntityActions(
-                                    kotlin.jvm.JvmClassMappingKt.getKotlinClass(Attack.class)
-                            ),
+                            new EntityActions(Attack.class),
                             inventory
                     );
-                    builder.facets(Movable.INSTANCE, Attackable.INSTANCE, ItemDropper.INSTANCE, LootDropper.INSTANCE, Destructible.INSTANCE);
-                    builder.behaviors(Wanderer.INSTANCE);
+                    b.facets(Movable.INSTANCE, Attackable.INSTANCE, ItemDropper.INSTANCE, LootDropper.INSTANCE, Destructible.INSTANCE);
+                    b.behaviors(Wanderer.INSTANCE);
                     return Unit.INSTANCE;
                 }
         );
     }
 
-    @SuppressWarnings("unchecked")
     public static Entity<EntityTypes.ZirconType, GameContext> newZircon() {
-        return (Entity<EntityTypes.ZirconType, GameContext>) EntitiesKt.newEntityOfType(
+        return (Entity<EntityTypes.ZirconType, GameContext>)(Object) EntitiesKt.newEntityOfType(
                 EntityTypes.ZirconType.INSTANCE,
                 builder -> {
-                    builder.attributes(
+                    EntityBuilder b = (EntityBuilder) builder;
+                    b.attributes(
                             new ItemIcon(
                                     Tile.newBuilder()
                                             .withName("white gem")
@@ -186,12 +183,12 @@ public final class EntityFactory {
         );
     }
 
-    @SuppressWarnings("unchecked")
     public static Entity<EntityTypes.BatMeatType, GameContext> newBatMeat() {
-        return (Entity<EntityTypes.BatMeatType, GameContext>) EntitiesKt.newEntityOfType(
+        return (Entity<EntityTypes.BatMeatType, GameContext>)(Object) EntitiesKt.newEntityOfType(
                 EntityTypes.BatMeatType.INSTANCE,
                 builder -> {
-                    builder.attributes(
+                    EntityBuilder b = (EntityBuilder) builder;
+                    b.attributes(
                             new ItemIcon(
                                     Tile.newBuilder()
                                             .withName("Meatball")
@@ -207,12 +204,12 @@ public final class EntityFactory {
         );
     }
 
-    @SuppressWarnings("unchecked")
     public static Entity<EntityTypes.DaggerType, GameContext> newDagger() {
-        return (Entity<EntityTypes.DaggerType, GameContext>) EntitiesKt.newEntityOfType(
+        return (Entity<EntityTypes.DaggerType, GameContext>)(Object) EntitiesKt.newEntityOfType(
                 EntityTypes.DaggerType.INSTANCE,
                 builder -> {
-                    builder.attributes(
+                    EntityBuilder b = (EntityBuilder) builder;
+                    b.attributes(
                             new ItemIcon(Tile.newBuilder()
                                     .withName("Dagger")
                                     .withTileset(GraphicalTilesetResources.nethack16x16())
@@ -226,12 +223,12 @@ public final class EntityFactory {
         );
     }
 
-    @SuppressWarnings("unchecked")
     public static Entity<EntityTypes.SwordType, GameContext> newSword() {
-        return (Entity<EntityTypes.SwordType, GameContext>) EntitiesKt.newEntityOfType(
+        return (Entity<EntityTypes.SwordType, GameContext>)(Object) EntitiesKt.newEntityOfType(
                 EntityTypes.SwordType.INSTANCE,
                 builder -> {
-                    builder.attributes(
+                    EntityBuilder b = (EntityBuilder) builder;
+                    b.attributes(
                             new ItemIcon(Tile.newBuilder()
                                     .withName("Short sword")
                                     .withTileset(GraphicalTilesetResources.nethack16x16())
@@ -245,12 +242,12 @@ public final class EntityFactory {
         );
     }
 
-    @SuppressWarnings("unchecked")
     public static Entity<EntityTypes.StaffType, GameContext> newStaff() {
-        return (Entity<EntityTypes.StaffType, GameContext>) EntitiesKt.newEntityOfType(
+        return (Entity<EntityTypes.StaffType, GameContext>)(Object) EntitiesKt.newEntityOfType(
                 EntityTypes.StaffType.INSTANCE,
                 builder -> {
-                    builder.attributes(
+                    EntityBuilder b = (EntityBuilder) builder;
+                    b.attributes(
                             new ItemIcon(Tile.newBuilder()
                                     .withName("staff")
                                     .withTileset(GraphicalTilesetResources.nethack16x16())
@@ -264,12 +261,12 @@ public final class EntityFactory {
         );
     }
 
-    @SuppressWarnings("unchecked")
     public static Entity<EntityTypes.LightArmorType, GameContext> newLightArmor() {
-        return (Entity<EntityTypes.LightArmorType, GameContext>) EntitiesKt.newEntityOfType(
+        return (Entity<EntityTypes.LightArmorType, GameContext>)(Object) EntitiesKt.newEntityOfType(
                 EntityTypes.LightArmorType.INSTANCE,
                 builder -> {
-                    builder.attributes(
+                    EntityBuilder b = (EntityBuilder) builder;
+                    b.attributes(
                             new ItemIcon(Tile.newBuilder()
                                     .withName("Leather armor")
                                     .withTileset(GraphicalTilesetResources.nethack16x16())
@@ -283,12 +280,12 @@ public final class EntityFactory {
         );
     }
 
-    @SuppressWarnings("unchecked")
     public static Entity<EntityTypes.MediumArmorType, GameContext> newMediumArmor() {
-        return (Entity<EntityTypes.MediumArmorType, GameContext>) EntitiesKt.newEntityOfType(
+        return (Entity<EntityTypes.MediumArmorType, GameContext>)(Object) EntitiesKt.newEntityOfType(
                 EntityTypes.MediumArmorType.INSTANCE,
                 builder -> {
-                    builder.attributes(
+                    EntityBuilder b = (EntityBuilder) builder;
+                    b.attributes(
                             new ItemIcon(Tile.newBuilder()
                                     .withName("Chain mail")
                                     .withTileset(GraphicalTilesetResources.nethack16x16())
@@ -302,12 +299,12 @@ public final class EntityFactory {
         );
     }
 
-    @SuppressWarnings("unchecked")
     public static Entity<EntityTypes.HeavyArmorType, GameContext> newHeavyArmor() {
-        return (Entity<EntityTypes.HeavyArmorType, GameContext>) EntitiesKt.newEntityOfType(
+        return (Entity<EntityTypes.HeavyArmorType, GameContext>)(Object) EntitiesKt.newEntityOfType(
                 EntityTypes.HeavyArmorType.INSTANCE,
                 builder -> {
-                    builder.attributes(
+                    EntityBuilder b = (EntityBuilder) builder;
+                    b.attributes(
                             new ItemIcon(Tile.newBuilder()
                                     .withName("Plate mail")
                                     .withTileset(GraphicalTilesetResources.nethack16x16())
@@ -321,12 +318,12 @@ public final class EntityFactory {
         );
     }
 
-    @SuppressWarnings("unchecked")
     public static Entity<EntityTypes.ClubType, GameContext> newClub() {
-        return (Entity<EntityTypes.ClubType, GameContext>) EntitiesKt.newEntityOfType(
+        return (Entity<EntityTypes.ClubType, GameContext>)(Object) EntitiesKt.newEntityOfType(
                 EntityTypes.ClubType.INSTANCE,
                 builder -> {
-                    builder.attributes(
+                    EntityBuilder b = (EntityBuilder) builder;
+                    b.attributes(
                             new ItemCombatStats(0, 0, "Weapon"),
                             new EntityTile(GameTileRepository.CLUB),
                             new EntityPosition(),
@@ -340,12 +337,12 @@ public final class EntityFactory {
         );
     }
 
-    @SuppressWarnings("unchecked")
     public static Entity<EntityTypes.JacketType, GameContext> newJacket() {
-        return (Entity<EntityTypes.JacketType, GameContext>) EntitiesKt.newEntityOfType(
+        return (Entity<EntityTypes.JacketType, GameContext>)(Object) EntitiesKt.newEntityOfType(
                 EntityTypes.JacketType.INSTANCE,
                 builder -> {
-                    builder.attributes(
+                    EntityBuilder b = (EntityBuilder) builder;
+                    b.attributes(
                             new ItemCombatStats(0, 0, "Armor"),
                             new EntityTile(GameTileRepository.JACKET),
                             new EntityPosition(),
@@ -359,7 +356,6 @@ public final class EntityFactory {
         );
     }
 
-    @SuppressWarnings("unchecked")
     public static Entity<? extends Weapon, GameContext> newRandomWeapon() {
         return switch (RANDOM.nextInt(3)) {
             case 0 -> newDagger();
@@ -368,7 +364,6 @@ public final class EntityFactory {
         };
     }
 
-    @SuppressWarnings("unchecked")
     public static Entity<? extends Armor, GameContext> newRandomArmor() {
         return switch (RANDOM.nextInt(3)) {
             case 0 -> newLightArmor();
@@ -377,38 +372,36 @@ public final class EntityFactory {
         };
     }
 
-    @SuppressWarnings("unchecked")
     public static Entity<EntityTypes.ZombieType, GameContext> newZombie() {
         var inventory = new Inventory(2);
         inventory.addItem(newRandomWeapon());
         inventory.addItem(newRandomArmor());
-        return (Entity<EntityTypes.ZombieType, GameContext>) EntitiesKt.newEntityOfType(
+        return (Entity<EntityTypes.ZombieType, GameContext>)(Object) EntitiesKt.newEntityOfType(
                 EntityTypes.ZombieType.INSTANCE,
                 builder -> {
-                    builder.attributes(
+                    EntityBuilder b = (EntityBuilder) builder;
+                    b.attributes(
                             BlockOccupier.INSTANCE,
                             new EntityPosition(),
                             new EntityTile(GameTileRepository.ZOMBIE),
                             new Vision(10),
                             CombatStats.create(25, 8, 4),
                             inventory,
-                            new EntityActions(
-                                    kotlin.jvm.JvmClassMappingKt.getKotlinClass(Attack.class)
-                            )
+                            new EntityActions(Attack.class)
                     );
-                    builder.facets(Movable.INSTANCE, Attackable.INSTANCE, ItemDropper.INSTANCE, LootDropper.INSTANCE, Destructible.INSTANCE);
-                    builder.behaviors(HunterSeeker.INSTANCE.or(Wanderer.INSTANCE));
+                    b.facets(Movable.INSTANCE, Attackable.INSTANCE, ItemDropper.INSTANCE, LootDropper.INSTANCE, Destructible.INSTANCE);
+                    b.behaviors(HunterSeeker.INSTANCE.or(Wanderer.INSTANCE));
                     return Unit.INSTANCE;
                 }
         );
     }
 
-    @SuppressWarnings("unchecked")
     public static Entity<EntityTypes.ExitType, GameContext> newExit() {
-        return (Entity<EntityTypes.ExitType, GameContext>) EntitiesKt.newEntityOfType(
+        return (Entity<EntityTypes.ExitType, GameContext>)(Object) EntitiesKt.newEntityOfType(
                 EntityTypes.ExitType.INSTANCE,
                 builder -> {
-                    builder.attributes(
+                    EntityBuilder b = (EntityBuilder) builder;
+                    b.attributes(
                             new EntityTile(GameTileRepository.EXIT),
                             new EntityPosition()
                     );

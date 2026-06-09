@@ -20,4 +20,14 @@ public class PlayerDied implements Event {
     public Object getEmitter() {
         return emitter;
     }
+
+    @Override
+    public String getKey() {
+        return Event.DefaultImpls.getKey(this);
+    }
+
+    @Override
+    public Iterable<Event> getTrace() {
+        return Event.DefaultImpls.getTrace(this);
+    }
 }

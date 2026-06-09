@@ -17,6 +17,7 @@ import org.hexworks.zircon.api.data.Tile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 
 public final class EntityExtensions {
@@ -44,7 +45,7 @@ public final class EntityExtensions {
     public static void setPosition(Entity<?, GameContext> entity,
                                    org.hexworks.zircon.api.data.Position3D position) {
         entity.findAttribute(JvmClassMappingKt.getKotlinClass(EntityPosition.class))
-                .ifPresent(ep -> ep.setPosition(position));
+                .ifPresent(ep -> { ep.setPosition(position); return kotlin.Unit.INSTANCE; });
     }
 
     public static boolean blocksVision(Entity<?, GameContext> entity) {

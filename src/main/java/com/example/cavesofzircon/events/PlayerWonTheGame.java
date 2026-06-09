@@ -20,4 +20,14 @@ public class PlayerWonTheGame implements Event {
     public Object getEmitter() {
         return emitter;
     }
+
+    @Override
+    public String getKey() {
+        return org.hexworks.cobalt.events.api.Event.DefaultImpls.getKey(this);
+    }
+
+    @Override
+    public Iterable<org.hexworks.cobalt.events.api.Event> getTrace() {
+        return org.hexworks.cobalt.events.api.Event.DefaultImpls.getTrace(this);
+    }
 }

@@ -20,7 +20,7 @@ public class StairClimber extends BaseFacet<GameContext, MoveUp> {
     }
 
     @Override
-    public Object receiveMessage(MoveUp message, Continuation<? super Response> continuation) {
+    public Object receive(MoveUp message, Continuation<? super Response> continuation) {
         var context = message.getContext();
         var player = message.getSource();
         var world = context.getWorld();

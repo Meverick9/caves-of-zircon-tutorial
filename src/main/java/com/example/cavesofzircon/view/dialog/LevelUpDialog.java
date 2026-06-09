@@ -12,6 +12,7 @@ import org.hexworks.zircon.api.Components;
 import org.hexworks.zircon.api.component.Container;
 import org.hexworks.zircon.api.graphics.BoxType;
 import org.hexworks.zircon.api.screen.Screen;
+import kotlin.Unit;
 import org.hexworks.zircon.api.uievent.Processed;
 import org.hexworks.zircon.internal.component.modal.EmptyModalResult;
 
@@ -22,7 +23,7 @@ public class LevelUpDialog extends Dialog {
     public LevelUpDialog(Screen screen, Entity<EntityTypes.PlayerType, GameContext> player) {
         super(screen, false);
         var vbox = Components.vbox()
-                .withDecorations(ComponentDecorations.box("Ding!", BoxType.TOP_BOTTOM_DOUBLE))
+                .withDecorations(ComponentDecorations.box(BoxType.TOP_BOTTOM_DOUBLE, "Ding!"))
                 .withSize(30, 15)
                 .build();
 
@@ -39,7 +40,7 @@ public class LevelUpDialog extends Dialog {
             stats.getMaxHpProperty().setValue(stats.getMaxHp() + 10);
             Functions.logGameEvent("You look healthier.", maxHpBtn);
             getRoot().close(EmptyModalResult.INSTANCE);
-            return Processed.INSTANCE;
+            return kotlin.Unit.INSTANCE;
         });
         vbox.addComponent(maxHpBtn);
 
@@ -48,7 +49,7 @@ public class LevelUpDialog extends Dialog {
             stats.getAttackValueProperty().setValue(stats.getAttackValue() + 2);
             Functions.logGameEvent("You look stronger.", attackBtn);
             getRoot().close(EmptyModalResult.INSTANCE);
-            return Processed.INSTANCE;
+            return kotlin.Unit.INSTANCE;
         });
         vbox.addComponent(attackBtn);
 
@@ -57,7 +58,7 @@ public class LevelUpDialog extends Dialog {
             stats.getDefenseValueProperty().setValue(stats.getDefenseValue() + 2);
             Functions.logGameEvent("You look tougher.", defenseBtn);
             getRoot().close(EmptyModalResult.INSTANCE);
-            return Processed.INSTANCE;
+            return kotlin.Unit.INSTANCE;
         });
         vbox.addComponent(defenseBtn);
 
@@ -66,7 +67,7 @@ public class LevelUpDialog extends Dialog {
             vision.setRadius(vision.getRadius() + 1);
             Functions.logGameEvent("You look more perceptive.", visionBtn);
             getRoot().close(EmptyModalResult.INSTANCE);
-            return Processed.INSTANCE;
+            return kotlin.Unit.INSTANCE;
         });
         vbox.addComponent(visionBtn);
 

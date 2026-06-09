@@ -22,7 +22,7 @@ public class Movable extends BaseFacet<GameContext, MoveTo> {
     }
 
     @Override
-    public Object receiveMessage(MoveTo message, Continuation<? super Response> continuation) {
+    public Object receive(MoveTo message, Continuation<? super Response> continuation) {
         var context = message.getContext();
         var entity = message.getSource();
         var position = message.getPosition();

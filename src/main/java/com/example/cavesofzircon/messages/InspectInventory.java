@@ -27,7 +27,12 @@ public class InspectInventory implements Message<GameContext> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public Entity<ItemHolder, GameContext> getSource() {
+    public Entity<org.hexworks.amethyst.api.entity.EntityType, GameContext> getSource() {
+        return (Entity<org.hexworks.amethyst.api.entity.EntityType, GameContext>)(Object) source;
+    }
+
+    @SuppressWarnings("unchecked")
+    public Entity<ItemHolder, GameContext> getItemHolder() {
         return (Entity<ItemHolder, GameContext>) source;
     }
 

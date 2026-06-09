@@ -13,7 +13,7 @@ public class HelpDialog extends Dialog {
     public HelpDialog(Screen screen) {
         super(screen);
         var panel = Components.panel()
-                .withDecorations(ComponentDecorations.box("Help", BoxType.TOP_BOTTOM_DOUBLE))
+                .withDecorations(ComponentDecorations.box(BoxType.TOP_BOTTOM_DOUBLE, "Help"))
                 .withSize(50, 30)
                 .build();
 

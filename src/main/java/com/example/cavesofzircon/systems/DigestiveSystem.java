@@ -21,8 +21,8 @@ public class DigestiveSystem extends BaseFacet<GameContext, Eat> {
     }
 
     @Override
-    public Object receiveMessage(Eat message, Continuation<? super Response> continuation) {
-        var entity = message.getSource();
+    public Object receive(Eat message, Continuation<? super Response> continuation) {
+        var entity = message.getEater();
         var food = message.getFood();
 
         int foodEnergy = EntityExtensions.getFoodEnergy(food);

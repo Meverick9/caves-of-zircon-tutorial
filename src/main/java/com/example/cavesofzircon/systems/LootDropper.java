@@ -20,7 +20,7 @@ public class LootDropper extends BaseFacet<GameContext, Destroy> {
     }
 
     @Override
-    public Object receiveMessage(Destroy message, Continuation<? super Response> continuation) {
+    public Object receive(Destroy message, Continuation<? super Response> continuation) {
         var context = message.getContext();
         var target = message.getTarget();
 

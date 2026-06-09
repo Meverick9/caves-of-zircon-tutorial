@@ -18,7 +18,8 @@ public class FogOfWar extends BaseBehavior<GameContext> {
     }
 
     @Override
-    public Object update(Entity<EntityType, GameContext> entity, GameContext context, Continuation<? super Boolean> continuation) {
+    public Object update(Entity<? extends EntityType, GameContext> entity, GameContext context,
+                         Continuation<? super Boolean> continuation) {
         var world = context.getWorld();
         var player = context.getPlayer();
         var playerZ = EntityExtensions.entityPosition(player).getZ();

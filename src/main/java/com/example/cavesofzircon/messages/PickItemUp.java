@@ -27,8 +27,13 @@ public class PickItemUp implements Message<GameContext> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public Entity<ItemHolder, GameContext> getSource() {
-        return (Entity<ItemHolder, GameContext>) source;
+    public Entity<org.hexworks.amethyst.api.entity.EntityType, GameContext> getSource() {
+        return (Entity<org.hexworks.amethyst.api.entity.EntityType, GameContext>)(Object) source;
+    }
+
+    @SuppressWarnings("unchecked")
+    public Entity<? extends ItemHolder, GameContext> getItemHolder() {
+        return source;
     }
 
     public Position3D getPosition() {

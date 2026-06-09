@@ -5,39 +5,44 @@ import com.example.cavesofzircon.attributes.types.Item;
 import com.example.cavesofzircon.blocks.GameBlock;
 import com.example.cavesofzircon.extensions.EntityExtensions;
 import com.example.cavesofzircon.extensions.PositionExtensions;
+import kotlinx.collections.immutable.ExtensionsKt;
 import org.hexworks.amethyst.api.Engine;
 import org.hexworks.amethyst.api.entity.Entity;
 import org.hexworks.amethyst.api.entity.EntityType;
 import org.hexworks.amethyst.internal.TurnBasedEngine;
 import org.hexworks.cobalt.datatypes.Maybe;
-import org.hexworks.zircon.api.builder.game.GameAreaBuilder;
 import org.hexworks.zircon.api.data.Position;
 import org.hexworks.zircon.api.data.Position3D;
 import org.hexworks.zircon.api.data.Size3D;
 import org.hexworks.zircon.api.data.Tile;
-import org.hexworks.zircon.api.game.GameArea;
+import org.hexworks.zircon.api.game.base.BaseGameArea;
 import org.hexworks.zircon.api.screen.Screen;
 import org.hexworks.zircon.api.shape.EllipseFactory;
 import org.hexworks.zircon.api.shape.LineFactory;
 import org.hexworks.zircon.api.uievent.UIEvent;
+import org.hexworks.zircon.internal.behavior.impl.DefaultScrollable3D;
 import kotlin.jvm.JvmClassMappingKt;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class World implements GameArea<Tile, GameBlock> {
+@SuppressWarnings({"unchecked", "rawtypes"})
+public class World extends BaseGameArea<Tile, GameBlock> {
 
-    private final GameArea<Tile, GameBlock> delegate;
-    @SuppressWarnings("unchecked")
-    private final TurnBasedEngine<GameContext> engine = (TurnBasedEngine<GameContext>) Engine.Companion.create();
+    private final TurnBasedEngine<GameContext> engine;
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     public World(Map<Position3D, GameBlock> startingBlocks, Size3D visibleSize, Size3D actualSize) {
-        this.delegate = (GameArea<Tile, GameBlock>) GameAreaBuilder.newBuilder()
-                .withVisibleSize(visibleSize)
-                .withActualSize(actualSize)
-                .build();
+        super(
+                visibleSize,
+                actualSize,
+                Position3D.defaultPosition(),
+                ExtensionsKt.persistentMapOf(),
+                Collections.emptyList(),
+                new DefaultScrollable3D(visibleSize, actualSize)
+        );
+        this.engine = (TurnBasedEngine<GameContext>)(Object) Engine.Companion.create();
 
         for (var entry : startingBlocks.entrySet()) {
             var pos = entry.getKey();
@@ -49,31 +54,6 @@ public class World implements GameArea<Tile, GameBlock> {
             }
         }
     }
-
-    // Delegate all GameArea methods
-    @Override public Size3D getActualSize() { return delegate.getActualSize(); }
-    @Override public Size3D getVisibleSize() { return delegate.getVisibleSize(); }
-    @Override public Position3D getVisibleOffset() { return delegate.getVisibleOffset(); }
-    @Override public Maybe<GameBlock> fetchBlockAt(Position3D position) { return delegate.fetchBlockAt(position); }
-    @Override public GameBlock fetchBlockAtOrNull(Position3D position) { return delegate.fetchBlockAtOrNull(position); }
-    @Override public void setBlockAt(Position3D position, GameBlock block) { delegate.setBlockAt(position, block); }
-    @Override public Iterable<GameBlock> fetchBlocks() { return delegate.fetchBlocks(); }
-    @Override public Iterable<org.hexworks.zircon.api.game.Cell<Tile, GameBlock>> fetchBlocksWithPositions() { return delegate.fetchBlocksWithPositions(); }
-    @Override public Iterable<org.hexworks.zircon.api.game.Cell<Tile, GameBlock>> fetchBlocksAt(Position3D offset, Size3D size) { return delegate.fetchBlocksAt(offset, size); }
-    @Override public Iterable<org.hexworks.zircon.api.game.Cell<Tile, GameBlock>> fetchBlocksWithPositionsAt(Position3D offset, Size3D size) { return delegate.fetchBlocksWithPositionsAt(offset, size); }
-    @Override public boolean hasBlockAt(Position3D position) { return delegate.hasBlockAt(position); }
-    @Override public void scrollOneBackward() { delegate.scrollOneBackward(); }
-    @Override public void scrollOneForward() { delegate.scrollOneForward(); }
-    @Override public void scrollOneLeft() { delegate.scrollOneLeft(); }
-    @Override public void scrollOneRight() { delegate.scrollOneRight(); }
-    @Override public void scrollOneUp() { delegate.scrollOneUp(); }
-    @Override public void scrollOneDown() { delegate.scrollOneDown(); }
-    @Override public void scrollUpBy(int z) { delegate.scrollUpBy(z); }
-    @Override public void scrollDownBy(int z) { delegate.scrollDownBy(z); }
-    @Override public void scrollRightBy(int x) { delegate.scrollRightBy(x); }
-    @Override public void scrollLeftBy(int x) { delegate.scrollLeftBy(x); }
-    @Override public void scrollForwardBy(int y) { delegate.scrollForwardBy(y); }
-    @Override public void scrollBackwardBy(int y) { delegate.scrollBackwardBy(y); }
 
     public void update(Screen screen, UIEvent uiEvent, Game game) {
         engine.executeTurn(new GameContext(this, screen, uiEvent, game.getPlayer()));
@@ -125,7 +105,7 @@ public class World implements GameArea<Tile, GameBlock> {
     }
 
     public Maybe<Position3D> findEmptyLocationWithin(Position3D offset, Size3D size) {
-        Maybe<Position3D> position = Maybe.empty();
+        Maybe<Position3D> position = Maybe.Companion.empty();
         int maxTries = 10;
         int currentTry = 0;
         while (!position.isPresent() && currentTry < maxTries) {
@@ -134,16 +114,9 @@ public class World implements GameArea<Tile, GameBlock> {
                     (int)(Math.random() * size.getYLength()) + offset.getY(),
                     (int)(Math.random() * size.getZLength()) + offset.getZ()
             );
-            fetchBlockAt(pos).map(block -> {
-                if (block.isEmptyFloor()) {
-                    return block;
-                }
-                return null;
-            });
-            // We need to check if block is empty floor
             var blockOpt = fetchBlockAt(pos);
             if (blockOpt.isPresent() && blockOpt.get().isEmptyFloor()) {
-                position = Maybe.of(pos);
+                position = Maybe.Companion.of(pos);
             }
             currentTry++;
         }
@@ -162,21 +135,21 @@ public class World implements GameArea<Tile, GameBlock> {
         );
     }
 
-    public Iterable<Position> findVisiblePositionsFor(Entity<EntityType, GameContext> entity) {
+    public Iterable<Position> findVisiblePositionsFor(Entity<?, GameContext> entity) {
         var centerPos = EntityExtensions.entityPosition(entity).to2DPosition();
         var visionOpt = entity.findAttribute(JvmClassMappingKt.getKotlinClass(Vision.class));
         if (!visionOpt.isPresent()) {
             return List.of();
         }
         var radius = visionOpt.get().getRadius();
-        var ellipsePositions = EllipseFactory.buildEllipse(
+        var ellipsePositions = EllipseFactory.INSTANCE.buildEllipse(
                 centerPos,
                 centerPos.withRelativeX(radius).withRelativeY(radius)
         ).getPositions();
         var result = new ArrayList<Position>();
         var entityZ = EntityExtensions.entityPosition(entity).getZ();
         for (var ringPos : ellipsePositions) {
-            var iter = LineFactory.buildLine(centerPos, ringPos).iterator();
+            var iter = LineFactory.INSTANCE.buildLine(centerPos, ringPos).iterator();
             do {
                 var next = iter.next();
                 result.add(next);
@@ -199,16 +172,16 @@ public class World implements GameArea<Tile, GameBlock> {
         var lookerPos = EntityExtensions.entityPosition(looker);
         var targetPos = EntityExtensions.entityPosition(target);
         if (isWithinRangeOf(lookerPos, targetPos, radius)) {
-            var path = LineFactory.buildLine(lookerPos.to2DPosition(), targetPos.to2DPosition());
+            var path = LineFactory.INSTANCE.buildLine(lookerPos.to2DPosition(), targetPos.to2DPosition());
             boolean blocked = false;
-            for (var pos : path.getPositions()) {
+            var positions = path.getPositions();
+            for (var pos : positions) {
                 if (isVisionBlockedAt(pos.toPosition3D(lookerPos.getZ()))) {
                     blocked = true;
                     break;
                 }
             }
             if (!blocked) {
-                var positions = path.getPositions();
                 boolean first = true;
                 for (var pos : positions) {
                     if (first) { first = false; continue; }
@@ -219,11 +192,12 @@ public class World implements GameArea<Tile, GameBlock> {
         return result;
     }
 
-    @SuppressWarnings("unchecked")
     public Maybe<Entity<? extends Item, GameContext>> findTopItem(Position3D position) {
         return fetchBlockAt(position).flatMap(block -> {
-            var filtered = EntityExtensions.filterType(block.getEntities(), Item.class);
-            return Maybe.ofNullable(filtered.isEmpty() ? null : (Entity<? extends Item, GameContext>) filtered.get(0));
+            @SuppressWarnings({"unchecked","rawtypes"})
+            Iterable<Entity<?, GameContext>> entities = (Iterable)(Object) block.getEntities();
+            var filtered = EntityExtensions.filterType(entities, Item.class);
+            return Maybe.Companion.ofNullable(filtered.isEmpty() ? null : filtered.get(0));
         });
     }
 

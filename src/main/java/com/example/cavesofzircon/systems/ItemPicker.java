@@ -19,15 +19,15 @@ public class ItemPicker extends BaseFacet<GameContext, PickItemUp> {
     }
 
     @Override
-    public Object receiveMessage(PickItemUp message, Continuation<? super Response> continuation) {
+    public Object receive(PickItemUp message, Continuation<? super Response> continuation) {
         var context = message.getContext();
-        var itemHolder = message.getSource();
+        var itemHolder = message.getItemHolder();
         var position = message.getPosition();
         var world = context.getWorld();
 
         world.findTopItem(position).map(item -> {
             if (EntityExtensions.addItem(itemHolder, item)) {
-                world.removeEntity(item);
+                world.removeEntity((org.hexworks.amethyst.api.entity.Entity<org.hexworks.amethyst.api.entity.EntityType, com.example.cavesofzircon.world.GameContext>)(Object) item);
                 String subject = EntityExtensions.isPlayer(itemHolder) ? "You" : "The " + itemHolder.getName();
                 String verb = EntityExtensions.isPlayer(itemHolder) ? "pick up" : "picks up";
                 Functions.logGameEvent(subject + " " + verb + " the " + item.getName() + ".", ItemPicker.this);

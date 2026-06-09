@@ -19,14 +19,14 @@ public class ItemDropper extends BaseFacet<GameContext, DropItem> {
     }
 
     @Override
-    public Object receiveMessage(DropItem message, Continuation<? super Response> continuation) {
+    public Object receive(DropItem message, Continuation<? super Response> continuation) {
         var context = message.getContext();
-        var itemHolder = message.getSource();
+        var itemHolder = message.getItemHolder();
         var item = message.getItem();
         var position = message.getPosition();
 
         if (EntityExtensions.removeItem(itemHolder, item)) {
-            context.getWorld().addEntity(item, position);
+            context.getWorld().addEntity((org.hexworks.amethyst.api.entity.Entity<org.hexworks.amethyst.api.entity.EntityType, com.example.cavesofzircon.world.GameContext>)(Object) item, position);
             String subject = EntityExtensions.isPlayer(itemHolder) ? "You" : "The " + itemHolder.getName();
             String verb = EntityExtensions.isPlayer(itemHolder) ? "drop" : "drops";
             Functions.logGameEvent(subject + " " + verb + " the " + item.getName() + ".", this);

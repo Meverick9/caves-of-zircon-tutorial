@@ -24,7 +24,7 @@ public class ZirconGatherer extends BaseFacet<GameContext, PickItemUp> {
     }
 
     @Override
-    public Object receiveMessage(PickItemUp message, Continuation<? super Response> continuation) {
+    public Object receive(PickItemUp message, Continuation<? super Response> continuation) {
         var context = message.getContext();
         var source = message.getSource();
         var position = message.getPosition();
@@ -36,7 +36,7 @@ public class ZirconGatherer extends BaseFacet<GameContext, PickItemUp> {
                 if (item.getType().equals(EntityTypes.ZirconType.INSTANCE)) {
                     var counter = EntityExtensions.getZirconCounter(zirconHolder);
                     counter.setZirconCount(counter.getZirconCount() + 1);
-                    world.removeEntity(item);
+                    world.removeEntity((org.hexworks.amethyst.api.entity.Entity<org.hexworks.amethyst.api.entity.EntityType, com.example.cavesofzircon.world.GameContext>)(Object) item);
                     Functions.logGameEvent(zirconHolder.getName() + " picked up a Zircon!", ZirconGatherer.this);
                     response[0] = Consumed.INSTANCE;
                 }

@@ -23,8 +23,9 @@ public class Expend implements Message<GameContext> {
     }
 
     @Override
-    public Entity<EnergyUser, GameContext> getSource() {
-        return source;
+    @SuppressWarnings("unchecked")
+    public Entity<org.hexworks.amethyst.api.entity.EntityType, GameContext> getSource() {
+        return (Entity<org.hexworks.amethyst.api.entity.EntityType, GameContext>)(Object) source;
     }
 
     public int getEnergy() {

@@ -36,7 +36,7 @@ public class GameBuilder {
         addZircons();
         addZombies();
         addExit();
-        world.addWorldEntity(EntityFactory.newFogOfWar());
+        world.addWorldEntity((Entity<EntityType, GameContext>)(Object) EntityFactory.newFogOfWar());
         return Game.create(player, world);
     }
 
@@ -92,7 +92,7 @@ public class GameBuilder {
         world.addAtEmptyPosition(
                 (Entity) entity,
                 Position3D.defaultPosition().withRelativeZ(atLevel),
-                Size3D.from2DSize(atArea)
+                Size3D.from2DSize(atArea, 1)
         );
     }
 

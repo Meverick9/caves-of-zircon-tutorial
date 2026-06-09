@@ -24,9 +24,9 @@ public class ExperienceAccumulator extends BaseFacet<GameContext, EntityDestroye
     }
 
     @Override
-    public Object receiveMessage(EntityDestroyed message, Continuation<? super Response> continuation) {
-        var defender = message.getDestroyed();
-        var attacker = message.getKiller();
+    public Object receive(EntityDestroyed message, Continuation<? super Response> continuation) {
+        var defender = message.getSource();
+        var attacker = message.getDestroyer();
 
         EntityExtensions.whenTypeIs(attacker, ExperienceGainer.class, experienceGainer -> {
             var xp = EntityExtensions.getExperience(experienceGainer);

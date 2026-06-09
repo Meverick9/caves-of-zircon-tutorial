@@ -10,6 +10,7 @@ import com.example.cavesofzircon.messages.InspectInventory;
 import com.example.cavesofzircon.view.dialog.ExamineDialog;
 import com.example.cavesofzircon.view.fragment.InventoryFragment;
 import com.example.cavesofzircon.world.GameContext;
+import kotlin.Unit;
 import kotlin.coroutines.Continuation;
 import kotlin.coroutines.EmptyCoroutineContext;
 import kotlin.jvm.JvmClassMappingKt;
@@ -23,9 +24,10 @@ import org.hexworks.zircon.api.Components;
 import org.hexworks.zircon.api.builder.component.ModalBuilder;
 import org.hexworks.zircon.api.component.ComponentAlignment;
 import org.hexworks.zircon.api.data.Size;
-import org.hexworks.zircon.api.uievent.Processed;
+import org.hexworks.zircon.api.graphics.BoxType;
 import org.hexworks.zircon.internal.component.modal.EmptyModalResult;
 
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class InventoryInspector extends BaseFacet<GameContext, InspectInventory> {
 
     public static final InventoryInspector INSTANCE = new InventoryInspector();
@@ -42,16 +44,15 @@ public class InventoryInspector extends BaseFacet<GameContext, InspectInventory>
     }
 
     @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public Object receiveMessage(InspectInventory message, Continuation<? super Response> continuation) {
+    public Object receive(InspectInventory message, Continuation<? super Response> continuation) {
         var context = message.getContext();
-        var itemHolder = message.getSource();
+        var itemHolder = message.getItemHolder();
         var position = message.getPosition();
         var screen = context.getScreen();
 
         var panel = Components.panel()
                 .withSize(DIALOG_SIZE)
-                .withDecorations(ComponentDecorations.box(org.hexworks.zircon.api.ComponentDecorations.box("Inventory")),
+                .withDecorations(ComponentDecorations.box(BoxType.SINGLE, "Inventory"),
                                  ComponentDecorations.shadow())
                 .build();
 
@@ -72,10 +73,10 @@ public class InventoryInspector extends BaseFacet<GameContext, InspectInventory>
                     });
                 },
                 item -> {
-                    final Maybe[] result = {Maybe.empty()};
+                    final Maybe[] result = {Maybe.Companion.empty()};
                     EntityExtensions.whenTypeIs(itemHolder, EquipmentHolder.class, equipmentHolder -> {
                         EntityExtensions.whenTypeIs(item, CombatItem.class, combatItem -> {
-                            result[0] = Maybe.of(EntityExtensions.equip(equipmentHolder, inventory, combatItem));
+                            result[0] = Maybe.Companion.of(EntityExtensions.equip(equipmentHolder, inventory, combatItem));
                         });
                     });
                     return result[0];
@@ -98,16 +99,16 @@ public class InventoryInspector extends BaseFacet<GameContext, InspectInventory>
                 .withAlignmentWithin(panel, ComponentAlignment.BOTTOM_LEFT)
                 .build());
         // Close button activation
-        panel.getChildren().forEach(child -> {
+        for (var child : panel.getChildren()) {
             if (child instanceof org.hexworks.zircon.api.component.Button btn) {
                 if (btn.getText().equals("Close")) {
                     btn.onActivated(uiAction -> {
                         modal.close(EmptyModalResult.INSTANCE);
-                        return Processed.INSTANCE;
+                        return Unit.INSTANCE;
                     });
                 }
             }
-        });
+        }
 
         modal.setTheme(GameConfig.THEME);
         screen.openModal(modal);

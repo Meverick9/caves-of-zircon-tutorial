@@ -5,7 +5,7 @@ import com.example.cavesofzircon.extensions.EntityExtensions;
 import com.example.cavesofzircon.world.GameContext;
 import kotlinx.collections.immutable.ExtensionsKt;
 import kotlinx.collections.immutable.PersistentMap;
-import kotlin.collections.TuplesKt;
+import kotlin.TuplesKt;
 import org.hexworks.amethyst.api.entity.Entity;
 import org.hexworks.amethyst.api.entity.EntityType;
 import org.hexworks.cobalt.datatypes.Maybe;
@@ -71,7 +71,7 @@ public class GameBlock extends BaseBlock<Tile> {
     }
 
     public Maybe<Entity<EntityType, GameContext>> getOccupier() {
-        return Maybe.ofNullable(
+        return Maybe.Companion.ofNullable(
                 currentEntities.stream()
                         .filter(EntityExtensions::occupiesBlock)
                         .findFirst()
